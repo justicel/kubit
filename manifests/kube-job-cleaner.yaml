@@ -1,0 +1,29 @@
+---
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  labels:
+    app: kube-job-cleaner
+    version: "0.2"
+  name: kube-job-cleaner
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: kube-job-cleaner
+            version: "0.2"
+        spec:
+          containers:
+            - name: cleaner
+              image: registry.opensource.zalan.do/teapot/kube-job-cleaner:0.2
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 100Mi
+                requests:
+                  cpu: 50m
+                  memory: 50Mi
+          restartPolicy: OnFailure
+  schedule: "17 * * * *"
