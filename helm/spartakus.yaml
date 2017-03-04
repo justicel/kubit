@@ -1,3 +1,5 @@
+# helm upgrade -i lolling-terrier stable/spartakus -f helm/spartakus.yaml
+---
 extraArgs: {}
 
 ## Container image

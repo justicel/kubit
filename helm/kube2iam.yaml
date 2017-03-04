@@ -1,3 +1,5 @@
+# helm upgrade -i turbulent-horse stable/kube2iam -f helm/kube2iam.yaml
+---
 extraArgs:
   base-role-arn: arn:aws:iam::064726124369:role/
 #   default-role: kube2iam-default

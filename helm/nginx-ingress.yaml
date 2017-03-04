@@ -1,3 +1,5 @@
+# helm upgrade -i cranky-albatross stable/nginx-ingress -f helm/nginx-ingress.yaml
+---
 ## nginx configuration
 ## Ref: https://github.com/kubernetes/ingress/blob/master/controllers/nginx/configuration.md
 ##

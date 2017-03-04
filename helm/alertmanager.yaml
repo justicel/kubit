@@ -1,3 +1,5 @@
+# helm upgrade -i mewing-chipmunk ../kube-prometheus-charts/alertmanager-0.6.0-1.tgz --namespace monitoring -f helm/alertmanager.yaml
+---
 config: {}
 
 ## External URL at which AlertManager will be reachable

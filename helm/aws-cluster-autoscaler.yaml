@@ -1,3 +1,5 @@
+# helm upgrade -i interesting-goose stable/aws-cluster-autoscaler -f helm/aws-cluster-autoscaler.yaml
+---
 autoscalingGroups:
   - name: kubit-workers-t2-large-a
     maxSize: 64
