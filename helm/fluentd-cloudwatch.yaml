@@ -1,0 +1,15 @@
+---
+awsRegion: us-east-1
+
+image:
+  repository: quay.io/widen/fluentd-k8s-cloudwatch-logs
+  tag: 0.10.0
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 50m
+    memory: 512Mi
+  requests:
+    cpu: 50m
+    memory: 512Mi

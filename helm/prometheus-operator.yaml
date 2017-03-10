@@ -1,4 +1,4 @@
-# helm upgrade -i dapper-whale ../kube-prometheus-charts/prometheus-operator-0.6.0-1.tgz --namespace monitoring -f helm/prometheus-operator.yaml
+# helm upgrade -i dapper-whale opsgoodness/prometheus-operator --namespace monitoring -f helm/prometheus-operator.yaml
 ---
 global:
   ## Hyperkube image to use when getting ThirdPartyResources & cleaning up
