@@ -30,6 +30,7 @@ variable "max_nodes" { default = 3 }
 variable "min_nodes" { default = 1 }
 variable "private_subnet_ids" { type = "list" }
 variable "public_subnet_ids" { type = "list" }
+variable "etcd_node_fqdns" { type = "list" }
 variable "ssh_key_name" {}
 
 

@@ -2,24 +2,15 @@
 ---
 
 coreos:
-  etcd2:
-    discovery_srv: ${INTERNAL_DOMAIN}
-    listen_client_urls: http://127.0.0.1:2379
-    peer_cert_file: /etc/kubernetes/ssl/etcd.pem
-    peer_key_file: /etc/kubernetes/ssl/etcd-key.pem
-    peer_client_cert_auth: true
-    peer_trusted_ca_file: /etc/kubernetes/ssl/ca.pem
-    proxy: on
-
   flannel:
     etcd_cafile: /etc/kubernetes/ssl/ca.pem
     etcd_certfile: /etc/kubernetes/ssl/etcd.pem
-    etcd_endpoints: http://127.0.0.1:2379
+    etcd_endpoints: ${ETCD_NODE_FQDNS}
     etcd_keyfile: /etc/kubernetes/ssl/etcd-key.pem
     interface: $private_ipv4
 
   locksmith:
-    endpoint: http://127.0.0.1:2379
+    endpoint: ${ETCD_NODE_FQDNS}
     etcd_cafile: /etc/kubernetes/ssl/ca.pem
     etcd_certfile: /etc/kubernetes/ssl/etcd.pem
     etcd_keyfile: /etc/kubernetes/ssl/etcd-key.pem
@@ -42,7 +33,7 @@ coreos:
             EnvironmentFile=/etc/kubernetes/cni/docker_opts_cni.env
             ExecStartPre=/usr/bin/systemctl is-active flanneld.service
 
-    - name: etcd2.service
+    - name: etcd-member.service
       command: start
       drop_ins:
         - name: 20-assets.conf
@@ -56,6 +47,19 @@ coreos:
 
             [Install]
             RequiredBy=flanneld.service
+        - name: 30-environment.conf
+          content: |
+            [Service]
+            Environment="ETCD_IMAGE_TAG=v3.1.5"
+            Environment="ETCD_DISCOVERY_SRV=${INTERNAL_DOMAIN}"
+            Environment="ETCD_LISTEN_CLIENT_URLS=http://127.0.0.1:2379"
+            Environment="ETCD_PEER_CERT_FILE=/etc/kubernetes/ssl/etcd.pem"
+            Environment="ETCD_PEER_KEY_FILE=/etc/kubernetes/ssl/etcd-key.pem"
+            Environment="ETCD_PEER_CLIENT_CERT_AUTH=true"
+            Environment="ETCD_PEER_TRUSTED_CA_FILE=/etc/kubernetes/ssl/ca.pem"
+            Environment="ETCD_PROXY=on"
+            Environment="RKT_RUN_ARGS=--volume etc-ssl,kind=host,source=/etc/kubernetes/ssl \
+              --mount volume=etc-ssl,target=/etc/kubernetes/ssl"
       enable: true
 
     - name: flanneld.service
@@ -63,6 +67,7 @@ coreos:
         - name: 10-etcd.conf
           content: |
             [Service]
+            Environment="FLANNEL_IMAGE_TAG=v0.7.1"
             Environment="ETCD_SSL_DIR=/etc/kubernetes/ssl"
             TimeoutStartSec=120
 
@@ -105,7 +110,8 @@ coreos:
           --experimental-bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubeconfig.yaml \
           --kubeconfig=/etc/kubernetes/kubeconfig.yaml \
           --network-plugin=cni \
-          --network-plugin-dir=/etc/kubernetes/cni/net.d \
+          --cni-bin-dir=/opt/cni/bin \
+          --cni-conf-dir=/etc/kubernetes/cni/net.d \
           --node-labels=kubernetes.io/role=node,node-role.kubernetes.io/node=true \
           --pod-manifest-path=/etc/kubernetes/manifests \
           --require-kubeconfig \
@@ -130,7 +136,7 @@ write_files:
       COREOS_PUBLIC_IPV4=$public_ipv4
       ETCDCTL_CA_FILE=/etc/kubernetes/ssl/ca.pem
       ETCDCTL_CERT_FILE=/etc/kubernetes/ssl/etcd.pem
-      ETCDCTL_ENDPOINT=http://127.0.0.1:2379
+      ETCDCTL_ENDPOINT=${ETCD_NODE_FQDNS}
       ETCDCTL_KEY_FILE=/etc/kubernetes/ssl/etcd-key.pem
 
   - path: /etc/kubernetes/cni/docker_opts_cni.env

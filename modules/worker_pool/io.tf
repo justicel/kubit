@@ -32,3 +32,4 @@ variable "subnet_id" {}
 variable "tls_token" {}
 variable "volume_size" { default = 32 }
 variable "volume_type" { default = "gp2" }
+variable "etcd_node_fqdns" { type = "list" }

@@ -40,6 +40,7 @@ data "template_file" "controllers_config" {
     SERVICES_CIDR_BLOCK = "${var.cluster["services_cidr_block"]}"
     TLS_TOKEN = "${random_id.tls_token.hex}"
     UPDATE_GROUP = "${var.coreos_channel}"
+    ETCD_NODE_FQDNS = "${join(",", formatlist("https://%s:2379", var.etcd_node_fqdns))}"
   }
 }
 

@@ -43,6 +43,7 @@ data "template_file" "pool_config" {
     LOCKSMITH_GROUP= "${data.template_file.pool_name.rendered}"
     TLS_TOKEN = "${var.tls_token}"
     UPDATE_GROUP = "${var.coreos_channel}"
+    ETCD_NODE_FQDNS = "${join(",", formatlist("https://%s:2379", var.etcd_node_fqdns))}"
   }
 }
 

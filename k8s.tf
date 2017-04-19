@@ -29,6 +29,11 @@ module "controllers" {
     "${module.security_groups.etcd_protocol}",
     "${module.security_groups.nodes}"
   ]
+  etcd_node_fqdns = [
+    "${module.etcd_node_01.fqdn}",
+    "${module.etcd_node_02.fqdn}",
+    "${module.etcd_node_03.fqdn}"
+  ]
   private_subnet_ids = ["${module.vpc.private_subnet_ids}"]
   public_subnet_ids = ["${module.vpc.public_subnet_ids}"]
   ssh_key_name = "${aws_key_pair.key_pair.key_name}"
@@ -48,6 +53,11 @@ module "workers_t2_large_0" {
     "${module.security_groups.etcd_protocol}",
     "${module.security_groups.nodes}",
     "${module.security_groups.workers}"
+  ]
+  etcd_node_fqdns = [
+    "${module.etcd_node_01.fqdn}",
+    "${module.etcd_node_02.fqdn}",
+    "${module.etcd_node_03.fqdn}"
   ]
   ssh_key_name = "${aws_key_pair.key_pair.key_name}"
   subnet_id = "${element(module.vpc.private_subnet_ids, 0)}"
@@ -69,6 +79,11 @@ module "workers_t2_large_1" {
     "${module.security_groups.nodes}",
     "${module.security_groups.workers}"
   ]
+  etcd_node_fqdns = [
+    "${module.etcd_node_01.fqdn}",
+    "${module.etcd_node_02.fqdn}",
+    "${module.etcd_node_03.fqdn}"
+  ]
   ssh_key_name = "${aws_key_pair.key_pair.key_name}"
   subnet_id = "${element(module.vpc.private_subnet_ids, 1)}"
   tls_token = "${module.controllers.tls_token}"
@@ -88,6 +103,11 @@ module "workers_t2_large_2" {
     "${module.security_groups.etcd_protocol}",
     "${module.security_groups.nodes}",
     "${module.security_groups.workers}"
+  ]
+  etcd_node_fqdns = [
+    "${module.etcd_node_01.fqdn}",
+    "${module.etcd_node_02.fqdn}",
+    "${module.etcd_node_03.fqdn}"
   ]
   ssh_key_name = "${aws_key_pair.key_pair.key_name}"
   subnet_id = "${element(module.vpc.private_subnet_ids, 2)}"
